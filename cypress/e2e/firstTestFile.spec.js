@@ -65,7 +65,7 @@ describe("First test suite", () => {
       .click();
   });
 
-  it.only("Third test - Save subject of the command", () => {
+  it("Third test - Save subject of the command", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
@@ -102,5 +102,89 @@ describe("First test suite", () => {
         .find("[for='inputPassword2']")
         .should("contain", "Password");
     });
+  });
+
+  it("Fourth test - Extract text values", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    //1
+    cy.get("[for='exampleInputEmail1']").should("contain", "Email address");
+
+    //2
+    cy.get("[for='exampleInputEmail1']").then((label) => {
+      const labelText = label.text();
+      expect(labelText).to.equal("Email address");
+      cy.wrap(labelText).should("contain", "Email address");
+    });
+
+    // 3
+    cy.get("[for='exampleInputEmail1']")
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.equal("Email address");
+      });
+    cy.get("[for='exampleInputEmail1']")
+      .invoke("text")
+      .as("labelText")
+      .should("contain", "Email address");
+
+    // 4
+    cy.get("[for='exampleInputEmail1']")
+      .invoke("attr", "class")
+      .then((classValue) => {
+        expect(classValue).to.equal("label");
+      });
+
+    // 5 Invoke property
+    cy.get("#exampleInputEmail1").type("test@test.com");
+    cy.get("#exampleInputEmail1")
+      .invoke("prop", "value")
+      .should("contain", "test@test.com")
+      .then((property) => {
+        expect(property).to.equal("test@test.com");
+      });
+
+    // Extra validation exercise
+    // force: true is necessary because the element has the value visually-hidden
+    // cy.contains("nb-card", "Basic form").find(".custom-checkbox").click();
+
+    cy.contains("nb-card", "Basic form")
+      .find("[type='checkbox']")
+      .then((cb) => {
+        cy.wrap(cb).check({ force: true }).should("be.checked");
+      });
+
+    cy.contains("nb-card", "Basic form")
+      .find(".custom-checkbox")
+      .invoke("attr", "class")
+      .then((classValue) => {
+        expect(classValue).to.contain("checked");
+      });
+  });
+
+  it("Fifth test - Checkboxes and Radio buttons", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    cy.contains("nb-card", "Using the Grid")
+      .find("[type='radio']")
+      .then((rb) => {
+        cy.wrap(rb).eq(0).check({ force: true }).should("be.checked");
+        cy.wrap(rb).eq(1).check({ force: true }).should("be.checked");
+        cy.wrap(rb).eq(0).should("not.be.checked");
+        cy.wrap(rb).eq(2).should("be.disabled");
+      });
+  });
+
+  it.only("Sixth test - Checkboxes and Radio buttons", () => {
+    cy.visit("/");
+    cy.contains("Modal & Overlays").click();
+    cy.contains("Toastr").click();
+
+    // Check all checkboxes
+    cy.get("[type='checkbox']").check({ force: true });
   });
 });
