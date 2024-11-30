@@ -36,7 +36,7 @@ describe("First test suite", () => {
     cy.get("[data-cy='imputEmail1']");
   });
 
-  it.only("Second test - First suite", () => {
+  it("Second test - First suite", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
@@ -63,5 +63,44 @@ describe("First test suite", () => {
       .parents("form")
       .find("nb-checkbox")
       .click();
+  });
+
+  it.only("Third test - Save subject of the command", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    cy.contains("nb-card", "Using the Grid")
+      .find("[for='inputEmail1']")
+      .should("contain", "Email");
+    cy.contains("nb-card", "Using the Grid")
+      .find("[for='inputPassword2']")
+      .should("contain", "Password");
+
+    //Ways to avoid repeating code
+
+    //CAN'T DO THIS IN CYPRESS
+    // const usingTheGrid = cy.contains("nb-card", "Using the Grid")
+    // usingTheGrid.find("[for='inputEmail1']").should("contain", "Email");
+    // usingTheGrid.find("[for='inputPassword2']").should("contain", "Password");
+
+    // Cypress Alias
+    cy.contains("nb-card", "Using the Grid").as("usingTheGrid");
+    cy.get("@usingTheGrid")
+      .find("[for='inputEmail1']")
+      .should("contain", "Email");
+    cy.get("@usingTheGrid")
+      .find("[for='inputPassword2']")
+      .should("contain", "Password");
+
+    // Cypress then() method
+    cy.contains("nb-card", "Using the Grid").then((usingTheGrid) => {
+      cy.wrap(usingTheGrid)
+        .find("[for='inputEmail1']")
+        .should("contain", "Email");
+      cy.wrap(usingTheGrid)
+        .find("[for='inputPassword2']")
+        .should("contain", "Password");
+    });
   });
 });
