@@ -145,5 +145,14 @@ describe("First test suite", () => {
       .then((property) => {
         expect(property).to.equal("test@test.com");
       });
+
+    // Extra validation exercise
+    cy.contains("nb-card", "Basic form").find(".custom-checkbox").click();
+    cy.contains("nb-card", "Basic form")
+      .find(".custom-checkbox")
+      .invoke("attr", "class")
+      .then((classValue) => {
+        expect(classValue).to.contain("checked");
+      });
   });
 });
