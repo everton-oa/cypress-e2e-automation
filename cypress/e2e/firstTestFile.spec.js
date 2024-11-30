@@ -5,7 +5,7 @@ describe("First test suite", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
-    
+
     //Find element by Tag name
     cy.get("input");
 
@@ -34,5 +34,34 @@ describe("First test suite", () => {
 
     //Find element by Cypress test ID
     cy.get("[data-cy='imputEmail1']");
+  });
+
+  it.only("Second test - First suite", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    //It only interacts with the first element among all elements found
+    //It ignores all other elements found
+    cy.contains("Sign in").click();
+
+    //Using a second attribute to find a unique element
+    cy.contains("[status='warning']", "Sign in").click();
+
+    //Chain using find() method
+    cy.contains("nb-card", "Horizontal form").find("button").click();
+    // cy.contains("nb-card", "Horizontal form").contains("Sign in").click();
+
+    //Chain methods do not work when get() is used - 8 elements are find using the method below
+    cy.contains("nb-card", "Horizontal form").get("button");
+
+    //Cypress chains and DOM
+    cy.get("#inputEmail3")
+      .parents("form")
+      .find("button")
+      .should("contain", "Sign in")
+      .parents("form")
+      .find("nb-checkbox")
+      .click();
   });
 });
