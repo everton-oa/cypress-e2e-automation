@@ -104,7 +104,7 @@ describe("First test suite", () => {
     });
   });
 
-  it.only("Fourth test - Extract text values", () => {
+  it("Fourth test - Extract text values", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
@@ -147,12 +147,44 @@ describe("First test suite", () => {
       });
 
     // Extra validation exercise
-    cy.contains("nb-card", "Basic form").find(".custom-checkbox").click();
+    // force: true is necessary because the element has the value visually-hidden
+    // cy.contains("nb-card", "Basic form").find(".custom-checkbox").click();
+
+    cy.contains("nb-card", "Basic form")
+      .find("[type='checkbox']")
+      .then((cb) => {
+        cy.wrap(cb).check({ force: true }).should("be.checked");
+      });
+
     cy.contains("nb-card", "Basic form")
       .find(".custom-checkbox")
       .invoke("attr", "class")
       .then((classValue) => {
         expect(classValue).to.contain("checked");
       });
+  });
+
+  it("Fifth test - Checkboxes and Radio buttons", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    cy.contains("nb-card", "Using the Grid")
+      .find("[type='radio']")
+      .then((rb) => {
+        cy.wrap(rb).eq(0).check({ force: true }).should("be.checked");
+        cy.wrap(rb).eq(1).check({ force: true }).should("be.checked");
+        cy.wrap(rb).eq(0).should("not.be.checked");
+        cy.wrap(rb).eq(2).should("be.disabled");
+      });
+  });
+
+  it.only("Sixth test - Checkboxes and Radio buttons", () => {
+    cy.visit("/");
+    cy.contains("Modal & Overlays").click();
+    cy.contains("Toastr").click();
+
+    // Check all checkboxes
+    cy.get("[type='checkbox']").check({ force: true });
   });
 });
