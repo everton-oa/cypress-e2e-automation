@@ -202,15 +202,16 @@ describe("First test suite", () => {
       .find("input")
       .then((input) => {
         cy.wrap(input).click();
-        cy.get(".day-cell").not(".bounding-month").contains(Number(futureDate)).click();
-        cy.wrap(input)
-          .invoke("prop", "value")
-          .should("contain", dateToAssert);
-          cy.wrap(input).should("have.value", dateToAssert);
+        cy.get(".day-cell")
+          .not(".bounding-month")
+          .contains(Number(futureDate))
+          .click();
+        cy.wrap(input).invoke("prop", "value").should("contain", dateToAssert);
+        cy.wrap(input).should("have.value", dateToAssert);
       });
   });
 
-  it.only("Eighth test - Date pickers 2", () => {
+  it("Eighth test - Date pickers 2", () => {
     function selectDayFromCurrent(day) {
       let date = new Date();
       date.setDate(date.getDate() + day);
@@ -251,5 +252,24 @@ describe("First test suite", () => {
         cy.wrap(input).invoke("prop", "value").should("contain", dateToAssert);
         cy.wrap(input).should("have.value", dateToAssert);
       });
+  });
+
+  it.only("Ninth test - Lists and Dropdowns", () => {
+    cy.visit("/");
+    // cy.get("nav").find("nb-select").click();
+    cy.get("nav nb-select").click();
+    cy.get(".options-list").contains("Dark").click();
+    cy.get("nav nb-select").should("contain", "Dark");
+
+    cy.get("nav nb-select").then((dropdown) => {
+      cy.wrap(dropdown).click();
+      cy.get(".options-list nb-option").each((listItem, index) => {
+        const itemText = listItem.text().trim();
+        cy.wrap(dropdown).should("contain", itemText); //assertion is failing - debug 
+        if (index < 3) {
+          cy.wrap(dropdown).click();
+        }
+      });
+    });
   });
 });
