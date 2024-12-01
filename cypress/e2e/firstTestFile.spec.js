@@ -188,7 +188,7 @@ describe("First test suite", () => {
     cy.get("[type='checkbox']").check({ force: true });
   });
 
-  it.only("Seventh test - Date pickers", () => {
+  it("Seventh test - Date pickers 1", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Datepicker").click();
@@ -197,7 +197,7 @@ describe("First test suite", () => {
     date.setDate(date.getDate() + 5);
     let futureDate = date.getDate();
     let dateToAssert = `Dec ${futureDate}, 2024`;
-    
+
     cy.contains("nb-card", "Common Datepicker")
       .find("input")
       .then((input) => {
@@ -206,6 +206,49 @@ describe("First test suite", () => {
         cy.wrap(input)
           .invoke("prop", "value")
           .should("contain", dateToAssert);
+          cy.wrap(input).should("have.value", dateToAssert);
+      });
+  });
+
+  it.only("Eighth test - Date pickers 2", () => {
+    function selectDayFromCurrent(day) {
+      let date = new Date();
+      date.setDate(date.getDate() + day);
+      let futureDay = date.getDate();
+      let futureMonth = date.toLocaleDateString("en-US", { month: "short" });
+      let futureYear = date.getFullYear();
+      let dateToAssert = `${futureMonth} ${futureDay}, ${futureYear}`;
+
+      cy.get("nb-calendar-navigation")
+        .invoke("attr", "ng-reflect-date")
+        .then((dateAttribute) => {
+          if (
+            !dateAttribute.includes(futureMonth) ||
+            !dateAttribute.includes(futureYear)
+          ) {
+            cy.get("[data-name='chevron-right']").click();
+            selectDayFromCurrent(day);
+          } else {
+            cy.get(".day-cell")
+              .not(".bounding-month")
+              .contains(Number(futureDay))
+              .click();
+          }
+        });
+      return dateToAssert;
+    }
+
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Datepicker").click();
+
+    cy.contains("nb-card", "Common Datepicker")
+      .find("input")
+      .then((input) => {
+        cy.wrap(input).click();
+
+        const dateToAssert = selectDayFromCurrent(5);
+        cy.wrap(input).invoke("prop", "value").should("contain", dateToAssert);
         cy.wrap(input).should("have.value", dateToAssert);
       });
   });
