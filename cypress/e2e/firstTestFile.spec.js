@@ -179,12 +179,34 @@ describe("First test suite", () => {
       });
   });
 
-  it.only("Sixth test - Checkboxes and Radio buttons", () => {
+  it("Sixth test - Checkboxes and Radio buttons", () => {
     cy.visit("/");
     cy.contains("Modal & Overlays").click();
     cy.contains("Toastr").click();
 
     // Check all checkboxes
     cy.get("[type='checkbox']").check({ force: true });
+  });
+
+  it.only("Seventh test - Date pickers", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Datepicker").click();
+
+    let date = new Date();
+    date.setDate(date.getDate() + 5);
+    let futureDate = date.getDate();
+    let dateToAssert = `Dec ${futureDate}, 2024`;
+    
+    cy.contains("nb-card", "Common Datepicker")
+      .find("input")
+      .then((input) => {
+        cy.wrap(input).click();
+        cy.get(".day-cell").not(".bounding-month").contains(Number(futureDate)).click();
+        cy.wrap(input)
+          .invoke("prop", "value")
+          .should("contain", dateToAssert);
+        cy.wrap(input).should("have.value", dateToAssert);
+      });
   });
 });
