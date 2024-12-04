@@ -13,6 +13,15 @@ module.exports = defineConfig({
     specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
       // implement node event listeners here
+    //   const username = process.env.DB_USERNAME;
+    //   const password = process.env.PASSWORD;
+
+    //   if (!password) {
+    //     throw new Error(`Missing PASSWORD environment variable`);
+    //   }
+
+    //   config.env = { username, password };
+    //   return config;
     },
     env: {
       username: "everton.araujo@test.com",
