@@ -330,7 +330,7 @@ describe("First test suite", () => {
     cy.get("nb-tooltip").should("contain", "This is a tooltip");
   });
 
-  it.only("Twelfth test - Dialog box", () => {
+  it("Twelfth test - Dialog box", () => {
     cy.visit("/");
     cy.contains("Tables & Data").click();
     cy.contains("Smart Table").click();
@@ -357,5 +357,41 @@ describe("First test suite", () => {
     // 3
     cy.get("tbody tr").first().find(".nb-trash").click();
     cy.on("window:confirm", () => false);
+  });
+
+  it.only("Delete a new article in a global feed", () => {
+    const bodyRequest = {
+      article: {
+        tagList: [],
+        title: "Request from the API",
+        description: "API testing is easy",
+        body: "Angular is cool",
+      },
+    };
+
+    cy.get("@token").then((token) => {
+      cy.request({
+        url: Cypress.env("apiUrl") + "/api/articles/",
+        headers: { Authorization: "Token " + token },
+        method: "POST",
+        body: bodyRequest,
+      }).then((response) => {
+        expect(response.status).to.equal(200);
+      });
+
+      cy.contains("Global Feed").click();
+      cy.get(".article-preview").first().click();
+      cy.ter(".article-actions").contains("Delete Article").click();
+
+      cy.request({
+        url: Cypress.env("apiUrl") + "/api/articles?limit=10&offset=0",
+        headers: { Authorization: "Token " + token },
+        methot: "GET",
+      })
+        .its("body")
+        .then((body) => {
+          expect(body.articles[0].title.not.to.equal("Request from the API"));
+        });
+    });
   });
 });

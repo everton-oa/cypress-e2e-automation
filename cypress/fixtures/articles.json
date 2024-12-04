@@ -1,0 +1,39 @@
+{
+  "articles": [
+    {
+      "slug": "This-is-the-title-13940",
+      "title": "Title 1",
+      "description": "This is the description",
+      "body": "This is the body of the article",
+      "tagList": [],
+      "createdAt": "2024-12-04T10:37:15.285Z",
+      "updatedAt": "2024-12-04T10:37:15.285Z",
+      "favorited": false,
+      "favoritesCount": 1,
+      "author": {
+        "username": "everton-araujo",
+        "bio": null,
+        "image": "https://conduit-api.bondaracademy.com/images/smiley-cyrus.jpeg",
+        "following": false
+      }
+    },
+    {
+      "slug": "Discover-Bondar-Academy:-Your-Gateway-to-Efficient-Learning-1",
+      "title": "Title 2",
+      "description": "This is the description",
+      "body": "This is the body of the article",
+      "tagList": [],
+      "createdAt": "2024-01-27T21:52:32.682Z",
+      "updatedAt": "2024-01-27T21:52:32.682Z",
+      "favorited": false,
+      "favoritesCount": 5,
+      "author": {
+        "username": "everton-araujo",
+        "bio": null,
+        "image": "https://conduit-api.bondaracademy.com/images/smiley-cyrus.jpeg",
+        "following": false
+      }
+    }
+  ],
+  "articlesCount": 2
+}

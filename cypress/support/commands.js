@@ -39,3 +39,36 @@
 Cypress.Commands.add("openHomePage", () => {
   cy.visit("/");
 });
+
+Cypress.Commands.add("loginToConduitApp", () => {
+  cy.visit("/login");
+  cy.get("[placeholder='Email']").type("everton.araujo@test.com");
+  cy.get("[placeholder='Password']").type("Cypress123");
+  cy.get("form").submit();
+});
+
+Cypress.Commands.add("loginToApp", () => {
+  const userCredentials = {
+    user: {
+      email: Cypress.env("username"),
+      password: Cypress.env("password"),
+    },
+  };
+
+  cy.request(
+    "POST",
+    Cypress.env("apiUrl") + "/api/users/login",
+    userCredentials
+  )
+    .its("body")
+    .then((body) => {
+      const token = body.user.token;
+      cy.wrap(token).as("token");
+      cy.visit("/"),
+        {
+          onbeforeunload(win) {
+            win.localStorage.setItem("jwtToken", token);
+          },
+        };
+    });
+});
