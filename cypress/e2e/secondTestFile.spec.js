@@ -5,7 +5,7 @@ const path = require("path");
 describe("Second test suite", () => {
   beforeEach("Login to the Conduit app", () => {
     cy.intercept({ method: "Get", path: "tags" }, { fixture: "tags.json" });
-    cy.loginToConduitApp();
+    cy.loginToConduitAppAPI();
   });
 
   it(
@@ -102,7 +102,7 @@ describe("Second test suite", () => {
       }).as("postArticles");
 
       cy.contains("New Article").click();
-      cy.get("[formcontrolname='title']").type("This is the title");
+      cy.get("[formcontrolname='title']").type("This is the new title");
       cy.get("[formcontrolname='description']").type("This is the description");
       cy.get("[formcontrolname='body']").type(
         "This is the body of the article"
@@ -123,17 +123,10 @@ describe("Second test suite", () => {
     }
   );
 
-  it.only(
+  it(
     "Delete a new article in a global feed",
     { baseUrl: Cypress.env("conduitBaseUrl") },
     () => {
-      const userCredentials = {
-        user: {
-          email: "everton.araujo@test.com",
-          password: "Cypress123",
-        },
-      };
-
       const bodyRequest = {
         article: {
           tagList: [],
@@ -143,39 +136,31 @@ describe("Second test suite", () => {
         },
       };
 
-      cy.request(
-        "POST",
-        "https://conduit-api.bondaracademy.com/api/users/login",
-        userCredentials
-      )
-        .its("body")
-        .then((body) => {
-          const token = body.user.token;
-
-          cy.request({
-            url: "https://conduit-api.bondaracademy.com/api/articles",
-            headers: { Authorization: "Token " + token },
-            method: "POST",
-            body: bodyRequest,
-          }).then((response) => {
-            expect(response.status).to.equal(201);
-          });
-
-          cy.contains("Global Feed").click();
-          cy.wait(1000);
-          cy.get(".article-preview").first().click();
-          cy.get(".article-actions").contains("Delete Article").click();
-
-          cy.request({
-            url: "https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0",
-            headers: { Authorization: "Token " + token },
-            method: "GET",
-          })
-            .its("body")
-            .then((body) => {
-              expect(body.articles[0].title).not.equal("Request from API");
-            });
+      cy.get("@token").then((token) => {
+        cy.request({
+          url: "https://conduit-api.bondaracademy.com/api/articles",
+          headers: { Authorization: "Token " + token },
+          method: "POST",
+          body: bodyRequest,
+        }).then((response) => {
+          expect(response.status).to.equal(201);
         });
+
+        cy.contains("Global Feed").click();
+        cy.wait(1000);
+        cy.get(".article-preview").first().click();
+        cy.get(".article-actions").contains("Delete Article").click();
+
+        cy.request({
+          url: "https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0",
+          headers: { Authorization: "Token " + token },
+          method: "GET",
+        })
+          .its("body")
+          .then((body) => {
+            expect(body.articles[0].title).not.equal("Request from API");
+          });
+      });
     }
   );
 });

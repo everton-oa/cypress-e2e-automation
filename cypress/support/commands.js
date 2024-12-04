@@ -47,6 +47,31 @@ Cypress.Commands.add("loginToConduitApp", () => {
   cy.get("form").submit();
 });
 
+Cypress.Commands.add("loginToConduitAppAPI", () => {
+  const userCredentials = {
+    user: {
+      email: "everton.araujo@test.com",
+      password: "Cypress123",
+    },
+  };
+
+  cy.request(
+    "POST",
+    "https://conduit-api.bondaracademy.com/api/users/login",
+    userCredentials
+  )
+    .its("body")
+    .then((body) => {
+      const token = body.user.token;
+      cy.wrap(token).as("token");
+      cy.visit("/", {
+        onBeforeLoad(win) {
+          win.localStorage.setItem("jwtToken", token);
+        },
+      });
+    });
+});
+
 Cypress.Commands.add("loginToApp", () => {
   const userCredentials = {
     user: {
