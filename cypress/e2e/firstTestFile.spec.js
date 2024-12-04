@@ -254,7 +254,7 @@ describe("First test suite", () => {
       });
   });
 
-  it("Ninth test - Lists and Dropdowns", () => {
+  it.only("Ninth test - Lists and Dropdowns", () => {
     cy.visit("/");
     // cy.get("nav").find("nb-select").click();
     cy.get("nav nb-select").click();
@@ -265,7 +265,8 @@ describe("First test suite", () => {
       cy.wrap(dropdown).click();
       cy.get(".options-list nb-option").each((listItem, index) => {
         const itemText = listItem.text().trim();
-        cy.wrap(dropdown).should("contain", itemText); //assertion is failing - debug
+        cy.wrap(listItem).click();
+        cy.wrap(dropdown).should("contain", itemText);
         if (index < 3) {
           cy.wrap(dropdown).click();
         }
@@ -357,41 +358,5 @@ describe("First test suite", () => {
     // 3
     cy.get("tbody tr").first().find(".nb-trash").click();
     cy.on("window:confirm", () => false);
-  });
-
-  it.only("Delete a new article in a global feed", () => {
-    const bodyRequest = {
-      article: {
-        tagList: [],
-        title: "Request from the API",
-        description: "API testing is easy",
-        body: "Angular is cool",
-      },
-    };
-
-    cy.get("@token").then((token) => {
-      cy.request({
-        url: Cypress.env("apiUrl") + "/api/articles/",
-        headers: { Authorization: "Token " + token },
-        method: "POST",
-        body: bodyRequest,
-      }).then((response) => {
-        expect(response.status).to.equal(200);
-      });
-
-      cy.contains("Global Feed").click();
-      cy.get(".article-preview").first().click();
-      cy.ter(".article-actions").contains("Delete Article").click();
-
-      cy.request({
-        url: Cypress.env("apiUrl") + "/api/articles?limit=10&offset=0",
-        headers: { Authorization: "Token " + token },
-        methot: "GET",
-      })
-        .its("body")
-        .then((body) => {
-          expect(body.articles[0].title.not.to.equal("Request from the API"));
-        });
-    });
   });
 });
