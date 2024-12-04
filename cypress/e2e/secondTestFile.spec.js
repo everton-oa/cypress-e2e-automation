@@ -36,6 +36,11 @@ describe("Second test suite", () => {
           "This is the description"
         );
       });
+      cy.get(".navbar").contains(" Home").click();
+      cy.contains("Global Feed").click();
+      cy.wait(1000);
+      cy.get(".article-preview").first().click();
+      cy.get(".article-actions").contains("Delete Article").click();
     }
   );
 
@@ -120,6 +125,11 @@ describe("Second test suite", () => {
           "THIS IS THE NEW DESCRIPTION"
         );
       });
+      cy.get(".navbar").contains(" Home").click();
+      cy.contains("Global Feed").click();
+      cy.wait(1000);
+      cy.get(".article-preview").first().click();
+      cy.get(".article-actions").contains("Delete Article").click();
     }
   );
 
