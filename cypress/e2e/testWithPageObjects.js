@@ -18,7 +18,7 @@ describe("First test suite", () => {
     navigateTo.toasterPage();
   });
 
-  it.only("Should submmit inline and basic form and select tomorrow date in the calendar", () => {
+  it("Should submmit inline and basic form and select tomorrow date in the calendar", () => {
     navigateTo.formLayoutsPage();
     onFormLayoutPage.submitInLineFormWithNameAndEmail(
       "Everton",
