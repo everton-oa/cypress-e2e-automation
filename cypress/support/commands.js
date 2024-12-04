@@ -50,14 +50,14 @@ Cypress.Commands.add("loginToConduitApp", () => {
 Cypress.Commands.add("loginToConduitAppAPI", () => {
   const userCredentials = {
     user: {
-      email: "everton.araujo@test.com",
-      password: "Cypress123",
+      email: Cypress.env("username"),
+      password: Cypress.env("password"),
     },
   };
 
   cy.request(
     "POST",
-    "https://conduit-api.bondaracademy.com/api/users/login",
+    Cypress.env("conduitApiBaseUrl")+"/api/users/login",
     userCredentials
   )
     .its("body")

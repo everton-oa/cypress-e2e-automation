@@ -14,7 +14,7 @@ describe("Second test suite", () => {
     () => {
       cy.intercept(
         "POST",
-        "https://conduit-api.bondaracademy.com/api/articles/"
+        Cypress.env("conduitApiBaseUrl") + "/api/articles/"
       ).as("postArticles");
 
       cy.contains("New Article").click();
@@ -61,7 +61,7 @@ describe("Second test suite", () => {
     () => {
       cy.intercept(
         "GET",
-        "https://conduit-api.bondaracademy.com/api/articles/feed*",
+        Cypress.env("conduitApiBaseUrl") + "/api/articles/feed*",
         {
           articles: [],
           articlesCount: 0,
@@ -70,7 +70,7 @@ describe("Second test suite", () => {
 
       cy.intercept(
         "GET",
-        "https://conduit-api.bondaracademy.com/api/articles*",
+        Cypress.env("conduitApiBaseUrl") + "/api/articles*",
         {
           fixture: "articles.json",
         }
@@ -87,7 +87,7 @@ describe("Second test suite", () => {
         file.articles[1].favoritesCount = 6;
         cy.intercept(
           "POST",
-          "https://conduit-api.bondaracademy.com/api/articles/" +
+          Cypress.env("conduitApiBaseUrl") + "/api/articles/" +
             articleLink +
             "/favorite",
           file
@@ -148,7 +148,7 @@ describe("Second test suite", () => {
 
       cy.get("@token").then((token) => {
         cy.request({
-          url: "https://conduit-api.bondaracademy.com/api/articles",
+          url: Cypress.env("conduitApiBaseUrl") + "/api/articles",
           headers: { Authorization: "Token " + token },
           method: "POST",
           body: bodyRequest,
@@ -162,7 +162,7 @@ describe("Second test suite", () => {
         cy.get(".article-actions").contains("Delete Article").click();
 
         cy.request({
-          url: "https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0",
+          url: Cypress.env("conduitApiBaseUrl") + "/api/articles?limit=10&offset=0",
           headers: { Authorization: "Token " + token },
           method: "GET",
         })
