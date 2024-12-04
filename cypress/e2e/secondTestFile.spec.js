@@ -8,7 +8,7 @@ describe("Second test suite", () => {
     cy.loginToConduitAppAPI();
   });
 
-  it.only(
+  it(
     "Verification of the Browser API calls",
     { baseUrl: Cypress.env("conduitBaseUrl") },
     () => {

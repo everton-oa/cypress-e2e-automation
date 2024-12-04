@@ -254,7 +254,7 @@ describe("First test suite", () => {
       });
   });
 
-  it("Ninth test - Lists and Dropdowns", () => {
+  it.only("Ninth test - Lists and Dropdowns", () => {
     cy.visit("/");
     // cy.get("nav").find("nb-select").click();
     cy.get("nav nb-select").click();
@@ -265,7 +265,8 @@ describe("First test suite", () => {
       cy.wrap(dropdown).click();
       cy.get(".options-list nb-option").each((listItem, index) => {
         const itemText = listItem.text().trim();
-        cy.wrap(dropdown).should("contain", itemText); //assertion is failing - debug
+        cy.wrap(listItem).click();
+        cy.wrap(dropdown).should("contain", itemText);
         if (index < 3) {
           cy.wrap(dropdown).click();
         }
