@@ -7,7 +7,7 @@ import { onSmartTablePage } from "../support/page-objects/smartTablePage";
 
 describe("First test suite", () => {
   beforeEach("Open application", () => {
-    cy.visit("/");
+    cy.openHomePage();
   });
 
   it("Verify navigation across the pages", () => {
